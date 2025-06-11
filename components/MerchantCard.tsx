@@ -12,31 +12,35 @@ interface MerchantCardProps {
 const MerchantCard: React.FC<MerchantCardProps> = ({ merchant, onPress }) => {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.7}>
-      <View style={styles.header}>
-        <Text style={styles.name}>{merchant.name}</Text>
-        <View style={styles.ratingContainer}>
-          <MaterialIcons name="star" size={16} color={Colors.warning} />
-          <Text style={styles.rating}>{merchant.rating.toFixed(1)}</Text>
+      <View style={styles.leftSection}>
+        <View style={styles.iconContainer}>
+          <Text style={styles.iconText}>{merchant.name.charAt(0)}</Text>
         </View>
       </View>
       
-      <View style={styles.discountContainer}>
-        <MaterialIcons name="local-offer" size={16} color="white" />
-        <Text style={styles.discount}>{merchant.discount}</Text>
-      </View>
-      
-      <View style={styles.addressContainer}>
-        <MaterialIcons name="location-on" size={16} color={Colors.textLight} />
-        <Text style={styles.address} numberOfLines={1}>{merchant.address}</Text>
-      </View>
-      
-      <View style={styles.footer}>
-        <View style={styles.contactContainer}>
-          <MaterialIcons name="phone" size={16} color={Colors.primary} />
-          <Text style={styles.contact}>{merchant.contact}</Text>
+      <View style={styles.middleSection}>
+        <View style={styles.header}>
+          <Text style={styles.name}>{merchant.name}</Text>
+          <View style={styles.ratingContainer}>
+            <MaterialIcons name="star" size={16} color={Colors.warning} />
+            <Text style={styles.rating}>{merchant.rating.toFixed(1)}</Text>
+          </View>
         </View>
+        
+        <View style={styles.discountContainer}>
+          <MaterialIcons name="local-offer" size={16} color="white" />
+          <Text style={styles.discount}>{merchant.discount}</Text>
+        </View>
+        
+        <View style={styles.addressContainer}>
+          <MaterialIcons name="location-on" size={14} color={Colors.textLight} />
+          <Text style={styles.address} numberOfLines={1}>{merchant.address}</Text>
+        </View>
+      </View>
+      
+      <View style={styles.rightSection}>
         <View style={styles.arrowContainer}>
-          <MaterialIcons name="chevron-right" size={20} color={Colors.primary} />
+          <MaterialIcons name="chevron-right" size={24} color={Colors.primary} />
         </View>
       </View>
     </TouchableOpacity>
@@ -50,6 +54,8 @@ const styles = StyleSheet.create({
     padding: 16,
     marginVertical: 8,
     marginHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
     ...Platform.select({
       ios: {
         shadowColor: Colors.cardShadow,
@@ -62,17 +68,37 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  leftSection: {
+    marginRight: 16,
+  },
+  iconContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: `${Colors.primary}15`,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: Colors.primary,
+  },
+  middleSection: {
+    flex: 1,
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 8,
   },
   name: {
     fontSize: 16,
     fontWeight: '600',
     color: Colors.text,
     flex: 1,
+    marginRight: 8,
   },
   ratingContainer: {
     flexDirection: 'row',
@@ -95,7 +121,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 12,
-    marginBottom: 12,
+    marginBottom: 8,
     alignSelf: 'flex-start',
   },
   discount: {
@@ -107,32 +133,16 @@ const styles = StyleSheet.create({
   addressContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
   },
   address: {
-    fontSize: 14,
+    fontSize: 13,
     color: Colors.textLight,
-    marginLeft: 6,
+    marginLeft: 4,
     flex: 1,
   },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  rightSection: {
+    justifyContent: 'center',
     alignItems: 'center',
-  },
-  contactContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: `${Colors.primary}10`,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 12,
-  },
-  contact: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: Colors.primary,
-    marginLeft: 6,
   },
   arrowContainer: {
     width: 32,

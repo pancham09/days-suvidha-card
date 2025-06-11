@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Dimensions } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 import { Category } from '../constants/MockData';
@@ -8,6 +8,9 @@ interface CategoryCardProps {
   category: Category;
   onPress: () => void;
 }
+
+const { width } = Dimensions.get('window');
+const cardWidth = (width - 48) / 2; // 2 columns with 16px padding on sides and 16px between
 
 const CategoryCard: React.FC<CategoryCardProps> = ({ category, onPress }) => {
   return (
@@ -19,15 +22,10 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onPress }) => {
       <View style={styles.iconContainer}>
         <MaterialIcons name={category.icon as any} size={28} color={Colors.primary} />
       </View>
-      <View style={styles.content}>
-        <Text style={styles.title}>{category.name}</Text>
-        <Text style={styles.description} numberOfLines={2}>
-          {category.description}
-        </Text>
-      </View>
-      <View style={styles.arrowContainer}>
-        <MaterialIcons name="chevron-right" size={24} color={Colors.primary} />
-      </View>
+      <Text style={styles.title}>{category.name}</Text>
+      <Text style={styles.description} numberOfLines={2}>
+        {category.description}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -37,9 +35,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.card,
     borderRadius: 16,
     padding: 16,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    flexDirection: 'row',
+    width: cardWidth,
+    margin: 8,
     alignItems: 'center',
     ...Platform.select({
       ios: {
@@ -54,36 +51,26 @@ const styles = StyleSheet.create({
     }),
   },
   iconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
     backgroundColor: `${Colors.primary}10`,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
-  },
-  content: {
-    flex: 1,
+    marginBottom: 16,
   },
   title: {
     fontSize: 16,
     fontWeight: '600',
     color: Colors.text,
-    marginBottom: 4,
+    marginBottom: 8,
+    textAlign: 'center',
   },
   description: {
-    fontSize: 14,
+    fontSize: 13,
     color: Colors.textLight,
-    lineHeight: 20,
-  },
-  arrowContainer: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: `${Colors.primary}10`,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 8,
+    lineHeight: 18,
+    textAlign: 'center',
   },
 });
 

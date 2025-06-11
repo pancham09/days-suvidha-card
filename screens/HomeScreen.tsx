@@ -1,11 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, SafeAreaView, StatusBar, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, SafeAreaView, StatusBar, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from '../components/Header';
 import CategoryCard from '../components/CategoryCard';
 import { categories } from '../constants/MockData';
 import Colors from '../constants/Colors';
 import { MaterialIcons } from '@expo/vector-icons';
+
+const { width } = Dimensions.get('window');
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -49,6 +51,8 @@ const HomeScreen = () => {
         )}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
+        numColumns={2}
+        columnWrapperStyle={styles.columnWrapper}
       />
     </SafeAreaView>
   );
@@ -112,7 +116,11 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingVertical: 8,
+    paddingHorizontal: 8,
     paddingBottom: 24,
+  },
+  columnWrapper: {
+    justifyContent: 'space-between',
   },
 });
 
