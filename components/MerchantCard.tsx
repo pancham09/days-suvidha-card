@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Image } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 import { Merchant } from '../constants/MockData';
@@ -10,37 +10,59 @@ interface MerchantCardProps {
 }
 
 const MerchantCard: React.FC<MerchantCardProps> = ({ merchant, onPress }) => {
+  // Function to determine the background color based on discount percentage
+  const getDiscountColor = (discount: string) => {
+    const percentage = parseInt(discount.replace(/\D/g, ''));
+    if (percentage >= 30) return Colors.secondary;
+    if (percentage >= 20) return Colors.info;
+    return Colors.primary;
+  };
+
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.7}>
-      <View style={styles.leftSection}>
-        <View style={styles.iconContainer}>
-          <Text style={styles.iconText}>{merchant.name.charAt(0)}</Text>
-        </View>
-      </View>
-      
-      <View style={styles.middleSection}>
-        <View style={styles.header}>
-          <Text style={styles.name}>{merchant.name}</Text>
-          <View style={styles.ratingContainer}>
-            <MaterialIcons name="star" size={16} color={Colors.warning} />
-            <Text style={styles.rating}>{merchant.rating.toFixed(1)}</Text>
+    <TouchableOpacity 
+      style={styles.card} 
+      onPress={onPress} 
+      activeOpacity={0.7}
+    >
+      <View style={styles.cardContent}>
+        <View style={styles.leftSection}>
+          <View style={styles.iconContainer}>
+            <Text style={styles.iconText}>{merchant.name.charAt(0)}</Text>
           </View>
         </View>
         
-        <View style={styles.discountContainer}>
-          <MaterialIcons name="local-offer" size={16} color="white" />
-          <Text style={styles.discount}>{merchant.discount}</Text>
-        </View>
-        
-        <View style={styles.addressContainer}>
-          <MaterialIcons name="location-on" size={14} color={Colors.textLight} />
-          <Text style={styles.address} numberOfLines={1}>{merchant.address}</Text>
+        <View style={styles.middleSection}>
+          <View style={styles.header}>
+            <Text style={styles.name}>{merchant.name}</Text>
+            <View style={styles.ratingContainer}>
+              <MaterialIcons name="star" size={16} color={Colors.warning} />
+              <Text style={styles.rating}>{merchant.rating.toFixed(1)}</Text>
+            </View>
+          </View>
+          
+          <View style={styles.discountContainer}>
+            <MaterialIcons name="local-offer" size={16} color="white" />
+            <Text style={styles.discount}>{merchant.discount}</Text>
+          </View>
+          
+          <View style={styles.addressContainer}>
+            <MaterialIcons name="location-on" size={14} color={Colors.textLight} />
+            <Text style={styles.address} numberOfLines={1}>{merchant.address}</Text>
+          </View>
         </View>
       </View>
       
-      <View style={styles.rightSection}>
+      <View style={styles.cardFooter}>
+        <View style={styles.tagContainer}>
+          <View style={[styles.tag, { backgroundColor: `${Colors.primary}15` }]}>
+            <Text style={styles.tagText}>Verified</Text>
+          </View>
+          <View style={[styles.tag, { backgroundColor: `${Colors.secondary}15` }]}>
+            <Text style={[styles.tagText, { color: Colors.secondary }]}>Popular</Text>
+          </View>
+        </View>
         <View style={styles.arrowContainer}>
-          <MaterialIcons name="chevron-right" size={24} color={Colors.primary} />
+          <MaterialIcons name="arrow-forward-ios" size={16} color={Colors.primary} />
         </View>
       </View>
     </TouchableOpacity>
@@ -51,11 +73,9 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.card,
     borderRadius: 16,
-    padding: 16,
     marginVertical: 8,
     marginHorizontal: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
+    overflow: 'hidden',
     ...Platform.select({
       ios: {
         shadowColor: Colors.cardShadow,
@@ -68,19 +88,23 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  cardContent: {
+    padding: 16,
+    flexDirection: 'row',
+  },
   leftSection: {
     marginRight: 16,
   },
   iconContainer: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 56,
+    height: 56,
+    borderRadius: 16,
     backgroundColor: `${Colors.primary}15`,
     justifyContent: 'center',
     alignItems: 'center',
   },
   iconText: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
     color: Colors.primary,
   },
@@ -140,14 +164,34 @@ const styles = StyleSheet.create({
     marginLeft: 4,
     flex: 1,
   },
-  rightSection: {
-    justifyContent: 'center',
+  cardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: Colors.border,
+    backgroundColor: `${Colors.background}50`,
+  },
+  tagContainer: {
+    flexDirection: 'row',
+  },
+  tag: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    marginRight: 8,
+  },
+  tagText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: Colors.primary,
   },
   arrowContainer: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     backgroundColor: `${Colors.primary}10`,
     justifyContent: 'center',
     alignItems: 'center',

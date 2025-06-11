@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, StatusBar, ScrollView, TouchableOpacity, Linking, Platform } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, StatusBar, ScrollView, TouchableOpacity, Linking, Platform, Image } from 'react-native';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import Header from '../components/Header';
@@ -13,6 +13,20 @@ type MerchantDetailRouteParams = {
 const MerchantDetailScreen = () => {
   const route = useRoute<RouteProp<Record<string, MerchantDetailRouteParams>, string>>();
   const { merchant } = route.params;
+
+  // Mock discount types for the merchant
+  const discountTypes = [
+    { type: 'Regular', description: '10% off on all items', icon: 'local-offer' },
+    { type: 'Weekend Special', description: '15% off on weekends', icon: 'event' },
+    { type: 'Family Package', description: '20% off for family visits', icon: 'people' },
+    { type: 'Student Discount', description: '12% off with student ID', icon: 'school' },
+  ];
+
+  // Mock operating hours
+  const operatingHours = [
+    { day: 'Monday - Friday', hours: '10:00 AM - 9:00 PM' },
+    { day: 'Saturday - Sunday', hours: '11:00 AM - 10:00 PM' },
+  ];
 
   const handleCall = () => {
     Linking.openURL(`tel:${merchant.contact}`);
@@ -29,7 +43,11 @@ const MerchantDetailScreen = () => {
       <Header title={merchant.name} showBackButton />
       
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        <View style={styles.headerSection}>
+        <View style={styles.merchantHeader}>
+          <View style={styles.merchantIconContainer}>
+            <Text style={styles.merchantIconText}>{merchant.name.charAt(0)}</Text>
+          </View>
+          <Text style={styles.merchantName}>{merchant.name}</Text>
           <View style={styles.ratingContainer}>
             <MaterialIcons name="star" size={20} color={Colors.warning} />
             <Text style={styles.rating}>{merchant.rating.toFixed(1)}</Text>
@@ -41,6 +59,29 @@ const MerchantDetailScreen = () => {
           </View>
         </View>
         
+        <View style={styles.quickActions}>
+          <TouchableOpacity style={styles.quickActionButton} onPress={handleCall}>
+            <View style={[styles.quickActionIcon, { backgroundColor: `${Colors.primary}15` }]}>
+              <MaterialIcons name="phone" size={22} color={Colors.primary} />
+            </View>
+            <Text style={styles.quickActionText}>Call</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.quickActionButton} onPress={handleMap}>
+            <View style={[styles.quickActionIcon, { backgroundColor: `${Colors.secondary}15` }]}>
+              <MaterialIcons name="map" size={22} color={Colors.secondary} />
+            </View>
+            <Text style={styles.quickActionText}>Directions</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.quickActionButton}>
+            <View style={[styles.quickActionIcon, { backgroundColor: `${Colors.info}15` }]}>
+              <MaterialIcons name="share" size={22} color={Colors.info} />
+            </View>
+            <Text style={styles.quickActionText}>Share</Text>
+          </TouchableOpacity>
+        </View>
+        
         <View style={styles.card}>
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
@@ -48,6 +89,45 @@ const MerchantDetailScreen = () => {
               <Text style={styles.sectionTitle}>About</Text>
             </View>
             <Text style={styles.description}>{merchant.description}</Text>
+          </View>
+          
+          <View style={styles.divider} />
+          
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <MaterialIcons name="local-offer" size={20} color={Colors.primary} />
+              <Text style={styles.sectionTitle}>Discount Types</Text>
+            </View>
+            <View style={styles.discountTypesContainer}>
+              {discountTypes.map((discount, index) => (
+                <View key={index} style={styles.discountTypeCard}>
+                  <View style={styles.discountTypeIconContainer}>
+                    <MaterialIcons name={discount.icon as any} size={20} color={Colors.primary} />
+                  </View>
+                  <View style={styles.discountTypeContent}>
+                    <Text style={styles.discountTypeTitle}>{discount.type}</Text>
+                    <Text style={styles.discountTypeDescription}>{discount.description}</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          </View>
+          
+          <View style={styles.divider} />
+          
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <MaterialIcons name="access-time" size={20} color={Colors.primary} />
+              <Text style={styles.sectionTitle}>Operating Hours</Text>
+            </View>
+            <View style={styles.hoursContainer}>
+              {operatingHours.map((item, index) => (
+                <View key={index} style={styles.hoursItem}>
+                  <Text style={styles.hoursDay}>{item.day}</Text>
+                  <Text style={styles.hoursTime}>{item.hours}</Text>
+                </View>
+              ))}
+            </View>
           </View>
           
           <View style={styles.divider} />
@@ -107,12 +187,31 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-  headerSection: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  merchantHeader: {
     alignItems: 'center',
+    paddingVertical: 24,
     paddingHorizontal: 16,
-    marginVertical: 16,
+  },
+  merchantIconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 24,
+    backgroundColor: `${Colors.primary}15`,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  merchantIconText: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: Colors.primary,
+  },
+  merchantName: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: Colors.text,
+    marginBottom: 8,
+    textAlign: 'center',
   },
   ratingContainer: {
     flexDirection: 'row',
@@ -121,6 +220,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 12,
+    marginBottom: 12,
   },
   rating: {
     fontSize: 16,
@@ -141,6 +241,42 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: 'white',
     marginLeft: 6,
+  },
+  quickActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 16,
+    marginHorizontal: 16,
+    backgroundColor: Colors.card,
+    borderRadius: 16,
+    marginBottom: 16,
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.cardShadow,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  quickActionButton: {
+    alignItems: 'center',
+  },
+  quickActionIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  quickActionText: {
+    fontSize: 12,
+    color: Colors.text,
+    fontWeight: '500',
   },
   card: {
     backgroundColor: Colors.card,
@@ -182,6 +318,61 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: Colors.border,
     marginVertical: 16,
+  },
+  discountTypesContainer: {
+    marginTop: 8,
+  },
+  discountTypeCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: `${Colors.background}80`,
+    padding: 12,
+    borderRadius: 12,
+    marginBottom: 8,
+  },
+  discountTypeIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: `${Colors.primary}10`,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  discountTypeContent: {
+    flex: 1,
+  },
+  discountTypeTitle: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: Colors.text,
+    marginBottom: 4,
+  },
+  discountTypeDescription: {
+    fontSize: 13,
+    color: Colors.textLight,
+  },
+  hoursContainer: {
+    backgroundColor: `${Colors.background}80`,
+    borderRadius: 12,
+    padding: 12,
+  },
+  hoursItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: `${Colors.border}50`,
+  },
+  hoursDay: {
+    fontSize: 14,
+    color: Colors.text,
+    fontWeight: '500',
+  },
+  hoursTime: {
+    fontSize: 14,
+    color: Colors.primary,
+    fontWeight: '500',
   },
   addressContainer: {
     backgroundColor: `${Colors.textLight}08`,
