@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, FlatList, SafeAreaView, StatusBar } from 'react-native';
+import { View, StyleSheet, FlatList, SafeAreaView, StatusBar, Text } from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import Header from '../components/Header';
 import MerchantCard from '../components/MerchantCard';
@@ -34,6 +34,13 @@ const CategoryScreen = () => {
       <StatusBar backgroundColor={Colors.card} barStyle="dark-content" />
       <Header title={categoryName} showBackButton />
       
+      <View style={styles.listHeader}>
+        <Text style={styles.listHeaderTitle}>Available Merchants</Text>
+        <Text style={styles.listHeaderSubtitle}>
+          {categoryMerchants.length} merchants offering discounts
+        </Text>
+      </View>
+      
       <FlatList
         data={categoryMerchants}
         keyExtractor={(item) => item.id}
@@ -55,8 +62,23 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background,
   },
+  listHeader: {
+    paddingHorizontal: 16,
+    marginVertical: 16,
+  },
+  listHeaderTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: Colors.text,
+  },
+  listHeaderSubtitle: {
+    fontSize: 14,
+    color: Colors.textLight,
+    marginTop: 4,
+  },
   listContent: {
     paddingVertical: 8,
+    paddingBottom: 24,
   },
 });
 

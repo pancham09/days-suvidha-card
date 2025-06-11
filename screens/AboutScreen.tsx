@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, StatusBar, ScrollView, Image, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, StatusBar, ScrollView, TouchableOpacity, Linking, Platform } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import Header from '../components/Header';
 import Colors from '../constants/Colors';
@@ -36,31 +36,29 @@ const AboutScreen = () => {
           </Text>
           
           <View style={styles.benefitsContainer}>
-            <Text style={styles.subtitle}>Key Benefits:</Text>
-            <View style={styles.benefitItem}>
-              <MaterialIcons name="check-circle" size={20} color={Colors.secondary} />
-              <Text style={styles.benefitText}>Exclusive discounts at 100+ merchants</Text>
-            </View>
-            <View style={styles.benefitItem}>
-              <MaterialIcons name="check-circle" size={20} color={Colors.secondary} />
-              <Text style={styles.benefitText}>Valid for the entire family</Text>
-            </View>
-            <View style={styles.benefitItem}>
-              <MaterialIcons name="check-circle" size={20} color={Colors.secondary} />
-              <Text style={styles.benefitText}>One-year validity</Text>
-            </View>
-            <View style={styles.benefitItem}>
-              <MaterialIcons name="check-circle" size={20} color={Colors.secondary} />
-              <Text style={styles.benefitText}>No usage limits</Text>
-            </View>
-            <View style={styles.benefitItem}>
-              <MaterialIcons name="check-circle" size={20} color={Colors.secondary} />
-              <Text style={styles.benefitText}>New merchants added regularly</Text>
+            <Text style={styles.subtitle}>Key Benefits</Text>
+            <View style={styles.benefitsList}>
+              {[
+                'Exclusive discounts at 100+ merchants',
+                'Valid for the entire family',
+                'One-year validity',
+                'No usage limits',
+                'New merchants added regularly'
+              ].map((benefit, index) => (
+                <View key={index} style={styles.benefitItem}>
+                  <View style={styles.benefitIcon}>
+                    <MaterialIcons name="check" size={16} color="white" />
+                  </View>
+                  <Text style={styles.benefitText}>{benefit}</Text>
+                </View>
+              ))}
             </View>
           </View>
           
+          <View style={styles.divider} />
+          
           <View style={styles.howToUseContainer}>
-            <Text style={styles.subtitle}>How to Use:</Text>
+            <Text style={styles.subtitle}>How to Use</Text>
             <Text style={styles.description}>
               Simply present your DAYS Suvidha Card at participating establishments before 
               making a payment to avail the discount. The merchant will verify your card 
@@ -68,24 +66,30 @@ const AboutScreen = () => {
             </Text>
           </View>
           
+          <View style={styles.divider} />
+          
           <View style={styles.contactContainer}>
-            <Text style={styles.subtitle}>Contact Us:</Text>
-            <TouchableOpacity style={styles.contactItem} onPress={handleContact}>
-              <MaterialIcons name="phone" size={20} color={Colors.primary} />
-              <Text style={styles.contactText}>+91 9876543210</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.contactItem} onPress={handleWebsite}>
-              <MaterialIcons name="language" size={20} color={Colors.primary} />
-              <Text style={styles.contactText}>www.daysahmedabad.com</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.contactItem}>
-              <MaterialIcons name="email" size={20} color={Colors.primary} />
-              <Text style={styles.contactText}>info@daysahmedabad.com</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.contactItem}>
-              <MaterialIcons name="location-on" size={20} color={Colors.primary} />
-              <Text style={styles.contactText}>123 SG Highway, Ahmedabad, Gujarat</Text>
-            </TouchableOpacity>
+            <Text style={styles.subtitle}>Contact Us</Text>
+            <View style={styles.contactList}>
+              {[
+                { icon: 'phone', text: '+91 9876543210', action: handleContact },
+                { icon: 'language', text: 'www.daysahmedabad.com', action: handleWebsite },
+                { icon: 'email', text: 'info@daysahmedabad.com', action: null },
+                { icon: 'location-on', text: '123 SG Highway, Ahmedabad, Gujarat', action: null }
+              ].map((item, index) => (
+                <TouchableOpacity 
+                  key={index} 
+                  style={styles.contactItem}
+                  onPress={item.action}
+                  disabled={!item.action}
+                >
+                  <View style={[styles.contactIcon, { backgroundColor: `${Colors.primary}15` }]}>
+                    <MaterialIcons name={item.icon as any} size={18} color={Colors.primary} />
+                  </View>
+                  <Text style={styles.contactText}>{item.text}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
         </View>
         
@@ -113,10 +117,15 @@ const styles = StyleSheet.create({
   logoBackground: {
     width: 100,
     height: 100,
-    borderRadius: 50,
+    borderRadius: 24,
     backgroundColor: Colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: Colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
   },
   logoText: {
     fontSize: 28,
@@ -127,80 +136,114 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: Colors.primary,
-    marginTop: 8,
+    marginTop: 12,
   },
   card: {
     backgroundColor: Colors.card,
-    borderRadius: 12,
-    padding: 20,
+    borderRadius: 16,
+    padding: 24,
     margin: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.cardShadow,
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.15,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
     color: Colors.text,
-    marginBottom: 12,
+    marginBottom: 16,
   },
   subtitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: '600',
     color: Colors.text,
-    marginBottom: 12,
-    marginTop: 8,
+    marginBottom: 16,
   },
   description: {
     fontSize: 15,
     color: Colors.text,
-    lineHeight: 22,
-    marginBottom: 16,
+    lineHeight: 24,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: Colors.border,
+    marginVertical: 24,
   },
   benefitsContainer: {
-    marginVertical: 8,
+    marginTop: 24,
+  },
+  benefitsList: {
+    marginTop: 8,
   },
   benefitItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 12,
+  },
+  benefitIcon: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: Colors.secondary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
   },
   benefitText: {
     fontSize: 15,
     color: Colors.text,
-    marginLeft: 8,
+    flex: 1,
   },
   howToUseContainer: {
-    marginVertical: 8,
   },
   contactContainer: {
-    marginVertical: 8,
+  },
+  contactList: {
+    marginTop: 8,
   },
   contactItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 16,
+  },
+  contactIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
   },
   contactText: {
     fontSize: 15,
-    color: Colors.primary,
-    marginLeft: 8,
+    color: Colors.text,
   },
   websiteButton: {
     backgroundColor: Colors.primary,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 14,
-    borderRadius: 8,
+    paddingVertical: 16,
+    borderRadius: 12,
     marginHorizontal: 16,
     marginBottom: 24,
+    shadowColor: Colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
   },
   websiteButtonText: {
     color: 'white',
-    fontWeight: 'bold',
+    fontWeight: '600',
     fontSize: 16,
     marginRight: 8,
   },

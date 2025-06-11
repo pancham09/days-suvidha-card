@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 import { Merchant } from '../constants/MockData';
@@ -21,7 +21,7 @@ const MerchantCard: React.FC<MerchantCardProps> = ({ merchant, onPress }) => {
       </View>
       
       <View style={styles.discountContainer}>
-        <MaterialIcons name="local-offer" size={16} color={Colors.secondary} />
+        <MaterialIcons name="local-offer" size={16} color="white" />
         <Text style={styles.discount}>{merchant.discount}</Text>
       </View>
       
@@ -35,7 +35,9 @@ const MerchantCard: React.FC<MerchantCardProps> = ({ merchant, onPress }) => {
           <MaterialIcons name="phone" size={16} color={Colors.primary} />
           <Text style={styles.contact}>{merchant.contact}</Text>
         </View>
-        <MaterialIcons name="chevron-right" size={20} color={Colors.textLight} />
+        <View style={styles.arrowContainer}>
+          <MaterialIcons name="chevron-right" size={20} color={Colors.primary} />
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -44,25 +46,31 @@ const MerchantCard: React.FC<MerchantCardProps> = ({ merchant, onPress }) => {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.card,
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 16,
     marginVertical: 8,
     marginHorizontal: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.cardShadow,
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.15,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   name: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
     color: Colors.text,
     flex: 1,
   },
@@ -76,25 +84,25 @@ const styles = StyleSheet.create({
   },
   rating: {
     fontSize: 14,
-    fontWeight: 'bold',
+    fontWeight: '600',
     color: Colors.warning,
     marginLeft: 4,
   },
   discountContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: `${Colors.secondary}15`,
-    paddingHorizontal: 8,
+    backgroundColor: Colors.secondary,
+    paddingHorizontal: 10,
     paddingVertical: 6,
-    borderRadius: 8,
+    borderRadius: 12,
     marginBottom: 12,
     alignSelf: 'flex-start',
   },
   discount: {
     fontSize: 14,
-    fontWeight: 'bold',
-    color: Colors.secondary,
-    marginLeft: 4,
+    fontWeight: '600',
+    color: 'white',
+    marginLeft: 6,
   },
   addressContainer: {
     flexDirection: 'row',
@@ -104,7 +112,7 @@ const styles = StyleSheet.create({
   address: {
     fontSize: 14,
     color: Colors.textLight,
-    marginLeft: 4,
+    marginLeft: 6,
     flex: 1,
   },
   footer: {
@@ -115,11 +123,24 @@ const styles = StyleSheet.create({
   contactContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: `${Colors.primary}10`,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 12,
   },
   contact: {
     fontSize: 14,
+    fontWeight: '500',
     color: Colors.primary,
-    marginLeft: 4,
+    marginLeft: 6,
+  },
+  arrowContainer: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: `${Colors.primary}10`,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

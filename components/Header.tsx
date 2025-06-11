@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../constants/Colors';
@@ -35,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({ title, showBackButton = false }) => {
 
 const styles = StyleSheet.create({
   header: {
-    height: 60,
+    height: 65,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -43,15 +43,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.cardShadow,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: '600',
     color: Colors.text,
     flex: 1,
     textAlign: 'center',
@@ -60,11 +66,23 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 16,
     zIndex: 1,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.03)',
   },
   infoButton: {
     position: 'absolute',
     right: 16,
     zIndex: 1,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(74, 111, 255, 0.08)',
   },
 });
 

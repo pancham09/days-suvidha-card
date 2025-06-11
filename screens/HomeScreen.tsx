@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, SafeAreaView, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, FlatList, SafeAreaView, StatusBar, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from '../components/Header';
 import CategoryCard from '../components/CategoryCard';
 import { categories } from '../constants/MockData';
 import Colors from '../constants/Colors';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -19,10 +20,22 @@ const HomeScreen = () => {
       <Header title="DAYS Ahmedabad" />
       
       <View style={styles.banner}>
-        <Text style={styles.bannerTitle}>Suvidha Card</Text>
-        <Text style={styles.bannerSubtitle}>
-          Exclusive discounts across Ahmedabad
-        </Text>
+        <View style={styles.bannerContent}>
+          <View>
+            <Text style={styles.bannerTitle}>Suvidha Card</Text>
+            <Text style={styles.bannerSubtitle}>
+              Exclusive discounts across Ahmedabad
+            </Text>
+          </View>
+          <View style={styles.bannerIconContainer}>
+            <MaterialIcons name="card-giftcard" size={40} color="white" />
+          </View>
+        </View>
+      </View>
+      
+      <View style={styles.listHeader}>
+        <Text style={styles.listHeaderTitle}>Categories</Text>
+        <Text style={styles.listHeaderSubtitle}>Explore discount categories</Text>
       </View>
       
       <FlatList
@@ -49,7 +62,20 @@ const styles = StyleSheet.create({
   banner: {
     backgroundColor: Colors.primary,
     padding: 20,
-    marginBottom: 8,
+    marginHorizontal: 16,
+    marginTop: 16,
+    marginBottom: 16,
+    borderRadius: 16,
+    elevation: 4,
+    shadowColor: Colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+  },
+  bannerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   bannerTitle: {
     fontSize: 24,
@@ -60,9 +86,33 @@ const styles = StyleSheet.create({
   bannerSubtitle: {
     fontSize: 16,
     color: 'rgba(255, 255, 255, 0.9)',
+    maxWidth: '80%',
+  },
+  bannerIconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  listHeader: {
+    paddingHorizontal: 16,
+    marginBottom: 8,
+  },
+  listHeaderTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: Colors.text,
+  },
+  listHeaderSubtitle: {
+    fontSize: 14,
+    color: Colors.textLight,
+    marginTop: 4,
   },
   listContent: {
     paddingVertical: 8,
+    paddingBottom: 24,
   },
 });
 
